@@ -20,7 +20,7 @@ var formats = {
     },
     'instagram': {
         'on': false,
-        'link_match': / /,
+        'link_match': /(instagr\.am|instagram\.com)/,
         'api': instagram_api
     }
 };
@@ -41,7 +41,9 @@ for (let i = 0; i < messages.length; i++){
                 message.innerHTML = format.format.replace('##link##', text);
             }
         } else if (format.api){
-            format.api(text, message);
+            if (text.match(format.link_match) != null){
+                format.api(text, message);
+            }
         }
     });
 }
