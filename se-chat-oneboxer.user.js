@@ -30,6 +30,11 @@ var formats = {
         'link_match': /(instagr\.am|instagram\.com)/,
         'api': instagram_api
     },
+    'instagram_photos': {
+        'on': true,
+        'link_match': /(instagr\.am|instagram\.com)/,
+        'api': instagram_api_photos
+    },
     'github': {
         'on': false,
         'link_match': /github\.com/,
@@ -41,7 +46,7 @@ var formats = {
         'api': commitstrip_api
     }
 };
-var formatKeys = Object.keys(formats);
+var formatKeys = Object.keys(formats).filter(function(format){ return formats[format].on });
 function convert(){
     var messages = document.querySelectorAll('.content');
     for (let i = 0; i < messages.length; i++){
@@ -82,6 +87,23 @@ function instagram_api(link, element){
         }
     });
 }
+function instagram_api_photos(link, element){
+    GM_xmlhttpRequest({
+        method: "GET",
+        url: "https://api.instagram.com/oembed?url=" + link,
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        onload: function(response) {
+            if (response.status != 200) return;
+            try {
+                element.innerHTML = "<div style='height: 403px; width: 300px;'>" + JSON.parse(response.responseText).html + "</div>";
+            }
+            catch (c){ return; }
+            if (window.instgrm) window.instgrm.Embeds.process();
+        }
+    });
+}
 function commitstrip_api(link, element){
     GM_xmlhttpRequest({
         method: "GET",
@@ -91,8 +113,7 @@ function commitstrip_api(link, element){
         },
         onload: function(response) {
             if (response.status != 200) return;
-            try {
-                debugger;
+            try 
                 var fakeElement = document.createElement('div');
                 fakeElement.innerHTML = response.responseText;
                 var img = fakeElement.querySelector('.entry-content img');
