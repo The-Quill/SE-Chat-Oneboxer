@@ -9,13 +9,14 @@ Feel free to search through the open issues to see what sites are planned for su
 
  - Videos
  - Instagram
- - GitHub (users and projects)
+ - GitHub (projects)
  - CommitStrip
 
 
 Planned for the [second sprint](https://github.com/The-Quill/SE-Chat-Oneboxer/milestones/Version%202.0) is the following:
 
  - Strawpoll
+ - GitHub (users)
  - Coding Horror
  - Expanded Twitter oneboxing
  - Vine
