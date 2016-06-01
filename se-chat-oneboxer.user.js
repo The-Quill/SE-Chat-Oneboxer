@@ -60,7 +60,7 @@ var defaultFormats = {
     }
 };
 
-if (!localStorage.hasOwnProperty(oneboxerLocalStorageLookupKey) || JSON.parse(localStorage.getItem(oneboxerLocalStorageLookupKey)).hasOwnProperty('formats') || JSON.parse(localStorage.getItem(oneboxerLocalStorageLookupKey)).version != version){
+if (!localStorage.hasOwnProperty(oneboxerLocalStorageLookupKey) || !JSON.parse(localStorage.getItem(oneboxerLocalStorageLookupKey)).hasOwnProperty('formats') || JSON.parse(localStorage.getItem(oneboxerLocalStorageLookupKey)).version != version){
     localStorage.setItem(oneboxerLocalStorageLookupKey, JSON.stringify({formats: defaultFormats, version: version}));
 }
 
