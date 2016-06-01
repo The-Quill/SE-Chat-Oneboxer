@@ -29,6 +29,11 @@ var formats = {
         'on': false,
         'link_match': /(instagr\.am|instagram\.com)/,
         'api': instagram_api
+    },
+    'github': {
+        'on': false,
+        'link_match': /github\.com/,
+        'api': github_api
     }
 };
 var formatKeys = Object.keys(formats);
@@ -55,7 +60,6 @@ function convert(){
         });
     }
 }
-
 function instagram_api(link, element){
     GM_xmlhttpRequest({
         method: "GET",
@@ -70,6 +74,40 @@ function instagram_api(link, element){
             }
             catch (c){ return; }
             if (window.instgrm) window.instgrm.Embeds.process();
+        }
+    });
+}
+function github_api(link, element){
+    var subdomain = 'user';
+    if (link.match(/(\/[\w\d-_]+\/[\w\d-_]+)/) != null){
+        subdomain = 'repos';
+    }
+    GM_xmlhttpRequest({
+        method: "GET",
+        url: "https://api.github.com/" + subdomain + link.replace('https://', '').replace('http://', '').replace('github.com', ''),
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        onload: function(response) {
+            if (response.status != 200) return;
+            try {
+                var text = JSON.parse(response.responseText);
+                GM_xmlhttpRequest({
+                    method: "GET",
+                    url: text.contributors_url,
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    onload: function(response) {
+                        if (response.status != 200) return;
+                        try {
+                            element.innerHTML = '<div class="ob-docs ob-docs-topic"><div class="topic-row"><div class="topic-metrics"><div class="topic-metric score-metric"><div class="topic-metric-number">' + text.stargazers_count + '</div><div class="topic-metric-label">stars</div></div><div class="topic-metric example-metric"><div class="topic-metric-number">' + text.watchers_count + '</div><div class="topic-metric-label">watchers</div></div></div><div class="topic-links"><h2><a class="doc-topic-link" href="' + text.html_url + '">' + text.name+ '</a></h2><div class="examples">' + text.description + '</div></div><div class="topic-users"><div class="contributor-count">' + JSON.parse(response.responseText).length + ' contributor/s</div><div class="last-editor"><div class="user-info "><div class="user-gravatar32"><a href="' + text.owner.html_url + '"><div class="gravatar-wrapper-32"><img src="' + text.owner.avatar_url + '" alt="" width="32" height="32"></div></a></div><div class="user-details"><a href="' + text.owner.html_url + '">' + text.owner.login + '</a></div></div></div></div></div></div>';
+                        }
+                        catch (c){ return; }
+                    }
+                });
+            }
+            catch (c){ return; }
         }
     });
 }
