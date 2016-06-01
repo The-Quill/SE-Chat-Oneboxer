@@ -3,6 +3,8 @@ A oneboxing UserScript for Stack Exchange chat.
 
 Click [here](https://github.com/The-Quill/SE-Chat-Oneboxer/raw/master/se-chat-oneboxer.user.js) to install.
 
+To fiddle with which oneboxes you want on, you can see the _Oneboxer_ setting up by the room description.
+
 Feel free to search through the open issues to see what sites are planned for support, but so far the list is as follows:
 
  - Videos
