@@ -34,6 +34,11 @@ var formats = {
         'on': false,
         'link_match': /github\.com/,
         'api': github_api
+    },
+    'commitstrip': {
+        'on': false,
+        'link_match': /commitstrip\.com/,
+        'api': commitstrip_api
     }
 };
 var formatKeys = Object.keys(formats);
@@ -74,6 +79,26 @@ function instagram_api(link, element){
             }
             catch (c){ return; }
             if (window.instgrm) window.instgrm.Embeds.process();
+        }
+    });
+}
+function commitstrip_api(link, element){
+    GM_xmlhttpRequest({
+        method: "GET",
+        url: link,
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        onload: function(response) {
+            if (response.status != 200) return;
+            try {
+                debugger;
+                var fakeElement = document.createElement('div');
+                fakeElement.innerHTML = response.responseText;
+                var img = fakeElement.querySelector('.entry-content img');
+                element.innerHTML = "<img src='" + img.src + "' style='height: 403px; width: 300px;'>";
+            }
+            catch (c){ return; }
         }
     });
 }
