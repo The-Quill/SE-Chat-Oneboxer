@@ -1,5 +1,7 @@
 # SE-Chat-Oneboxer
-A oneboxing script for Stack Exchange chat.
+A oneboxing UserScript for Stack Exchange chat.
+
+Click [here](https://github.com/The-Quill/SE-Chat-Oneboxer/raw/master/se-chat-oneboxer.user.js) to install.
 
 Feel free to search through the open issues to see what sites are planned for support, but so far the list is as follows:
 
