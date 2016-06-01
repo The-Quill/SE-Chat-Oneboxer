@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name SE-Chat-Oneboxer
 // @description A link oneboxer for SE Chat
-// @version 0.0.1
+// @version 1.0.0
 // @match *://chat.stackexchange.com/rooms/*
 // @match *://chat.stackoverflow.com/rooms/*
 // @match *://chat.meta.stackexchange.com/rooms/*
