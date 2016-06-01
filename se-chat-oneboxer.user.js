@@ -113,7 +113,7 @@ function commitstrip_api(link, element){
         },
         onload: function(response) {
             if (response.status != 200) return;
-            try 
+            try {
                 var fakeElement = document.createElement('div');
                 fakeElement.innerHTML = response.responseText;
                 var img = fakeElement.querySelector('.entry-content img');
