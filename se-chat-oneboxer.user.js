@@ -44,6 +44,12 @@ var defaultFormats = {
         'on': false,
         'link_match': /commitstrip\.com/,
         'api': 'commitstrip'
+    },
+    'strawpoll': {
+        'name': 'Straw Poll',
+        'on': false,
+        'link_match': /strawpoll\.me/,
+        'api': 'strawpoll'
     }
 };
 
@@ -124,6 +130,9 @@ function convert(){
     }
 }
 var api = {
+    strawpoll: function(link, element){
+        element.innerHTML = '<iframe src="http://www.strawpoll.me/embed_1/' + link.replace('http://', '').replace('https://', '').replace('www.', '').replace('strawpoll.me/', '') + '" style="width:600px; height:314px; border:0;">Loading poll...</iframe>'
+    },
     instagram: function(link, element){
         GM_xmlhttpRequest({
             method: "GET",
