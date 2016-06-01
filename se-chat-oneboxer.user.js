@@ -36,8 +36,12 @@ for (let i = 0; i < messages.length; i++){
     }
     formatKeys.forEach(function(key){
         var format = formats[key];
-        if (text.match(format.link_match) != null){
-            message.innerHTML = format.format.replace('##link##', text);
+        if (format.format){
+            if (text.match(format.link_match) != null){
+                message.innerHTML = format.format.replace('##link##', text);
+            }
+        } else if (format.api){
+            format.api(text, message);
         }
     });
 }
