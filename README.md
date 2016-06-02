@@ -13,7 +13,7 @@ Feel free to search through the open issues to see what sites are planned for su
  - CommitStrip
  - Strawpoll
  - Coding Horror
-
+ - Vimeo
 
 Planned for the [second sprint](https://github.com/The-Quill/SE-Chat-Oneboxer/milestones/Version%202.0) is the following:
 
@@ -22,7 +22,7 @@ Planned for the [second sprint](https://github.com/The-Quill/SE-Chat-Oneboxer/mi
  - Coding Horror (done)
  - Expanded Twitter oneboxing
  - Vine
- - Vimeo
+ - Vimeo (done)
  - SE Tag Wiki
  - IMDB quotes
  - Urban Dictionary
