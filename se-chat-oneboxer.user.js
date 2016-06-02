@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name SE-Chat-Oneboxer
 // @description A link oneboxer for SE Chat
-// @version 1.0.3
+// @version 1.0.4
 // @match *://chat.stackexchange.com/rooms/*
 // @match *://chat.stackoverflow.com/rooms/*
 // @match *://chat.meta.stackexchange.com/rooms/*
@@ -13,7 +13,11 @@
 // ==/UserScript==
 
 var oneboxerLocalStorageLookupKey = "The-Quill/SE-Chat-Oneboxer";
-var version = "1.0.3";
+var version = "1.0.4";
+var fixedWindow = window;
+if (unsafeWindow){
+    fixedWindow = unsafeWindow;
+}
 
 var defaultFormats = {
     'videos': {
@@ -57,6 +61,12 @@ var defaultFormats = {
         'on': true,
         'link_match': /blog\.codinghorror\.com/,
         'api': 'coding_horror'
+    },
+    'vimeo': {
+        'name': 'Vimeo',
+        'on': true,
+        'link_match': /vimeo\.com/,
+        'api': 'vimeo'
     }
 };
 
@@ -64,20 +74,21 @@ if (!localStorage.hasOwnProperty(oneboxerLocalStorageLookupKey) || !JSON.parse(l
     localStorage.setItem(oneboxerLocalStorageLookupKey, JSON.stringify({formats: defaultFormats, version: version}));
 }
 
-window.addEventListener("DOMNodeInserted", convert);
+fixedWindow.addEventListener("DOMNodeInserted", convert);
 var instagram = document.createElement('script');
 instagram.setAttribute('async', '');
 instagram.setAttribute('defer', '');
 instagram.src = '//platform.instagram.com/en_US/embeds.js';
 document.head.appendChild(instagram);
-window.onload = function(){
-    window.instgrm.Embeds.process();
-};
 
 var oneboxer = document.createElement('a');
 oneboxer.id = "oneboxer";
 oneboxer.setAttribute("title", "Set the oneboxing options");
 oneboxer.textContent = "| oneboxer";
+
+fixedWindow.onload = function(){
+    fixedWindow.instgrm.Embeds.process();
+};
 oneboxer.addEventListener('click', function(){
     var storedEvents = JSON.parse(localStorage.getItem(oneboxerLocalStorageLookupKey)).formats;
     var contentString = '<div class="wmd-prompt-background" style="position: fixed; top: 0px; z-index: 1000; opacity: 0.5; left: 0px; width: 100%; height: 100%;"></div> \
@@ -93,21 +104,27 @@ oneboxer.addEventListener('click', function(){
     });
     contentString += "</div>";
     $('body').append(contentString);
-    $("#_save").click(function(){
+    var saveElement = document.querySelector("#_save");
+    var closeElement = document.querySelector("#_close");
+    saveElement.addEventListener('click', function(){
         var elems = document.querySelectorAll('.wmd-prompt-dialog input[type=checkbox]');
         var storedEvents = JSON.parse(localStorage.getItem(oneboxerLocalStorageLookupKey)).formats;
         for (var i = 0; i < elems.length; i++){
             storedEvents[Object.keys(storedEvents)[i]].on = elems[i].checked;
         }
         localStorage.setItem(oneboxerLocalStorageLookupKey, JSON.stringify({formats: storedEvents, version: version}));
-        $("#_close").click();
+        closeElement.click();
     });
-    $("#_close").click(function(){
-        $(".wmd-prompt-background").remove();
-        $(".wmd-prompt-dialog").remove();
+    closeElement.addEventListener('click', function(){
+        var background = document.querySelector(".wmd-prompt-background");
+        background.remove();
+        var dialog = document.querySelector(".wmd-prompt-dialog");
+        dialog.remove();
     });
 });
-document.getElementById('sidebar-menu').appendChild(oneboxer);
+var sidebar = document.getElementById('sidebar-menu');
+sidebar.appendChild(oneboxer);
+
 var storedEvents = JSON.parse(localStorage.getItem(oneboxerLocalStorageLookupKey)).formats;
 var formatKeys = Object.keys(defaultFormats).filter(function(format){ return format in storedEvents ? storedEvents[format].on : false; });
 function convert(){
@@ -179,7 +196,7 @@ var api = {
                     element.innerHTML = "<div style='height: 403px; width: 300px;'>" + JSON.parse(response.responseText).html + "</div>";
                 }
                 catch (c){ return; }
-                if (window.instgrm) window.instgrm.Embeds.process();
+                if (fixedWindow.instgrm) fixedWindow.instgrm.Embeds.process();
             }
         });
     },
@@ -196,9 +213,12 @@ var api = {
                     element.innerHTML = "<img src='" + JSON.parse(response.responseText).thumbnail_url + "' style='height: 403px; width: 300px;' />";
                 }
                 catch (c){ return; }
-                if (window.instgrm) window.instgrm.Embeds.process();
+                if (fixedWindow.instgrm) fixedWindow.instgrm.Embeds.process();
             }
         });
+    },
+    vimeo: function(link, element){
+        element.innerHTML = '<iframe src="//player.vimeo.com/video/' + link.replace('https://', '').replace('http://', '').replace('vimeo.com', '') + '" width="300" height="150" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>';
     },
     commitstrip: function(link, element){
         GM_xmlhttpRequest({
