@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name SE-Chat-Oneboxer
 // @description A link oneboxer for SE Chat
-// @version 1.0.4
+// @version 1.0.5
 // @match *://chat.stackexchange.com/rooms/*
 // @match *://chat.stackoverflow.com/rooms/*
 // @match *://chat.meta.stackexchange.com/rooms/*
@@ -13,7 +13,7 @@
 // ==/UserScript==
 
 var oneboxerLocalStorageLookupKey = "The-Quill/SE-Chat-Oneboxer";
-var version = "1.0.4";
+var version = "1.0.5";
 var fixedWindow = window;
 if (unsafeWindow){
     fixedWindow = unsafeWindow;
